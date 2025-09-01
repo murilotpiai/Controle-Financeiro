@@ -1,99 +1,80 @@
-# 💰 Controle Financeiro — simples, direto e seu
+# 💰 Controle Financeiro — Site Estático (LocalStorage)
 
-Registre **receitas** e **despesas**, veja **gráficos** em tempo real e **exporte CSV**.  
-Os dados ficam **no seu Google Sheets**, sob seu controle, via **Google Apps Script**.
-
-> ⚡️ Não precisa de servidor nem cadastro externo. É um site estático (HTML/CSS/JS).
+Aplicação web **100% estática** para controlar receitas e despesas direto no **navegador**, sem servidor.  
+Os dados são guardados no **LocalStorage** do seu browser. Possui **gráficos**, **filtros**, **exportação para Excel/Word**, **tema claro/escuro** e **importação de CSV/JSON**.
 
 ---
 
-## ✨ O que dá pra fazer
+## 📸 Visão Geral
 
-- Adicionar **receitas** e **despesas** rapidamente
-- Ver **KPIs** (Receitas, Despesas, Saldo)
-- **Gráfico mensal** (barras) e **pizza por categoria**
-- **Filtros** por texto, tipo e período (mês)
-- **Editar** e **excluir** lançamentos
-- **Exportar CSV** (um clique)
-
----
-
-## 🚀 Como usar (3 passos)
-
-1. **Defina seu Usuário**  
-   No topo direito, digite seu identificador (ex.: seu e-mail) e clique **Salvar**.  
-   > Dica: use sempre o **mesmo** usuário para ver seus próprios lançamentos.
-
-2. **Lance as movimentações**  
-   Escolha **Receita** ou **Despesa**, preencha **Categoria**, **Valor**, **Data** e **Descrição** → **Salvar**.
-
-3. **Explore e filtre**  
-   Use os campos de **busca**, **tipo** e **período** para filtrar.  
-   Baixe tudo em **CSV** quando quiser.
+- **Sem backend**: funciona abrindo o `index.html` com duplo-clique.
+- **Dados locais**: cada navegador/usuário mantém seus próprios lançamentos.
+- **UI moderna e responsiva** com modo **Claro/Escuro**.
+- **Gráficos** (mensal e por categoria) com Chart.js.
+- **Filtros com “Aplicar” e “Limpar filtros”**.
+- **Exportar**:
+  - **Excel (.xlsx)** e **Word (.docx)** se as bibliotecas estiverem carregadas;
+  - **Fallback** automático para **.xls** e **.doc** (HTML) quando offline/bloqueado.
+- **Importar**: CSV ou JSON (modelo compatível).
+- **Edição/Exclusão** de lançamentos inline.
 
 ---
 
-## 🔒 Sobre seus dados
+## 🗂 Estrutura
 
-- Ficam na **sua planilha do Google** (aba `transacoes`).  
-- O site se conecta ao seu **Apps Script (Web App)**, que escreve/lê nessa planilha.  
-- Você pode abrir a planilha a qualquer momento para ver/editar linhas.
 
----
-
-## ❓ Perguntas frequentes
-
-**Preciso criar conta?**  
-Não. O “Usuário” é só um identificador para filtrar seus dados (ex.: seu e-mail ou apelido).
-
-**Funciona no celular?**  
-Sim. A interface é responsiva.
-
-**Posso apagar/editar um lançamento?**  
-Sim. Use os botões ✏️ (editar) e 🗑 (excluir) na tabela.
-
-**Posso baixar meus dados?**  
-Sim. Clique em **Exportar CSV**.
-
-**E se eu trocar de navegador?**  
-Reutilize o mesmo **Usuário** para ver seus lançamentos.
+**Bibliotecas via CDN** (carregadas no `index.html`):
+- [Chart.js] para gráficos  
+- [SheetJS (xlsx)] para Excel  
+- [docx] para Word  
+> Se a rede bloquear essas URLs, o app **cai automaticamente** para exportação em `.xls`/`.doc` baseado em HTML.
 
 ---
 
-## 🛠️ Requisitos (para quem vai configurar)
+## 🚀 Como rodar
 
-- Uma planilha no Google com a aba **`transacoes`**.  
-- Um **Apps Script** publicado como **Aplicativo da Web**:  
-  - Executar como: **Você**  
-  - Quem tem acesso: **Qualquer pessoa**  
-  - Copiar a URL de produção (termina em **`/exec`**)  
-- No arquivo `config.js` do site, colar essa URL em `APPS_SCRIPT_URL`.
+### Opção 1 — Local (recomendado para testes)
+1. Baixe/clon​e o repositório.
+2. Abra o arquivo **`index.html`** com duplo-clique.
 
-> Usuários comuns não precisam saber disso; basta usar o site pronto.
-
----
-
-## 📈 Dicas de uso
-
-- Formate a coluna **valor** da planilha como **Moeda (R$)** e a **data** como **AAAA-MM-DD**.  
-- Use **categorias** consistentes (ex.: “Alimentação”, “Transporte”, “Saúde”) para relatórios mais claros.  
-- Mantenha um **Usuário** único por pessoa (evita misturar dados).
+### Opção 2 — Vercel / Netlify / GitHub Pages
+- Basta fazer o **deploy estático** da pasta com `index.html`, `style.css` e `script.js`.  
+- Não há build. Não há variáveis de ambiente. Tudo roda no cliente.
 
 ---
 
-## 🗺️ Roadmap (ideias futuras)
+## 🧭 Uso rápido (passo a passo)
 
-- Metas mensais e alertas  
-- Lançamentos recorrentes  
-- Importação OFX/CSV (bancos)  
-- Google Sign-In  
-- Modo escuro
+1. **Usuário**: preencha o campo no topo e clique **Salvar**.  
+   > Importante: o app filtra os lançamentos por `userId`. Sem salvar, ele bloqueia o “Salvar lançamento”.
+2. **Novo lançamento**:
+   - Selecione **Tipo** (Receita/Despesa), **Categoria**, **Valor**, **Data** e **Descrição** → **Salvar**.
+3. **Filtros**:
+   - Texto, Tipo, Mês inicial/final → **Aplicar**.
+   - Para zerar todos os filtros → **Limpar filtros**.
+4. **Exportar**:
+   - **Excel**: baixa `controle_financeiro.xlsx` (ou `.xls` fallback).
+   - **Word**: baixa `controle_financeiro.docx` (ou `.doc` fallback).
+5. **Importar**:
+   - Clique **Importar** e envie um **CSV** ou **JSON** no modelo abaixo.
+6. **Tema**:
+   - Botão **Tema: Claro/Escuro** alterna e salva sua preferência.
 
 ---
 
-## 🧾 Licença
+## 📊 Modelo de dados (Importação)
 
-Uso livre para fins educacionais e pessoais.  
-Se publicar uma versão própria, cite a fonte e mantenha esta seção.
-
----
+### JSON (lista de objetos)
+```json
+[
+  {
+    "id": "uuid-opcional",
+    "userId": "meu-usuario",
+    "type": "receita ou despesa",
+    "categoria": "Alimentação",
+    "valor": 123.45,
+    "data": "2025-05-10",
+    "descricao": "Exemplo",
+    "createdAt": "2025-05-10T12:00:00.000Z"
+  }
+]
