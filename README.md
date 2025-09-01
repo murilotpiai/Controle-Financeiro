@@ -1,1 +1,0 @@
-# Controle-Financeiro-Frontend-est-tico-Google-Sheets
