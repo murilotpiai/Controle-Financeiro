@@ -29,6 +29,9 @@ const form=show("formLancamento"), alertForm=show("alertForm"), editBadge=show("
 const tabela=show("tabelaLancamentos").querySelector("tbody"), kpiReceitas=show("kpiReceitas"), kpiDespesas=show("kpiDespesas"), kpiSaldo=show("kpiSaldo");
 const filtroTexto=show("filtroTexto"), filtroTipo=show("filtroTipo"), filtroDataIni=show("filtroDataIni"), filtroDataFim=show("filtroDataFim"), btnAplicarFiltros=show("btnAplicarFiltros");
 const btnLimparFiltros = show("btnLimparFiltros"); 
+const btnExportJSON = show("btnExportJSON");
+const kpiTotal = show("kpiTotal");
+const kpiUltimaAtualizacao = show("kpiUltimaAtualizacao");
 const inputValor=show("valor");
 
 
@@ -128,6 +131,7 @@ fileImport.addEventListener("change", async (e)=>{
 
 btnExportXLSX.addEventListener("click", exportExcel);
 btnExportDOCX.addEventListener("click", exportWord);
+btnExportJSON.addEventListener("click", exportJSON);
 
 function refresh(){
   const all=loadAll();
@@ -161,6 +165,8 @@ function drawKPIs(){
   kpiReceitas.textContent = real(receitas);
   kpiDespesas.textContent = real(despesas);
   kpiSaldo.textContent = real(saldo);
+  kpiTotal.textContent = String(state.transacoes.length);
+  kpiUltimaAtualizacao.textContent = new Date().toLocaleString("pt-BR");
 }
 
 function themeColors(){
@@ -328,6 +334,10 @@ function tableHTML(rows){
 
 function drawTable(){
   const rows=getFiltered();
+  if(!rows.length){
+    tabela.innerHTML = `<tr class="empty-state"><td colspan="6">Nenhum lançamento encontrado com os filtros atuais.</td></tr>`;
+    return rows;
+  }
   tabela.innerHTML = rows.map(r=>`
     <tr>
       <td>${escapeHTML(r.data || "-")}</td>

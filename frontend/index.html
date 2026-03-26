@@ -96,6 +96,10 @@
         <div class="kpi"><span>Despesas</span><strong id="kpiDespesas">R$ 0,00</strong></div>
         <div class="kpi"><span>Saldo</span><strong id="kpiSaldo">R$ 0,00</strong></div>
       </div>
+      <div class="kpi-meta">
+        <span>Total de lançamentos: <strong id="kpiTotal">0</strong></span>
+        <span>Última atualização: <strong id="kpiUltimaAtualizacao">—</strong></span>
+      </div>
       <div style="height: 220px"><canvas id="chartMensal"></canvas></div>
     </section>
 
@@ -118,6 +122,7 @@
           <input id="filtroDataFim" type="month">
           <button id="btnAplicarFiltros" class="btn" type="button">Aplicar</button>
           <button id="btnLimparFiltros" class="btn ghost" type="button">Limpar filtros</button>
+          <button id="btnExportJSON" class="btn" type="button">Backup JSON</button>
         </div>
       </div>
       <div class="table-wrap">
