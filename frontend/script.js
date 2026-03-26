@@ -10,6 +10,13 @@ const toMonthKey = (iso) => { const d=new Date((iso||"")+"T00:00:00"); return is
 const parseBRL = (s) => Number(String(s||"").replace(/\./g,"").replace(",",".")||0);
 const formatMoneyInput = (v) => { const d=String(v||"").replace(/\D/g,""); if(!d) return ""; const n=Number(d)/100; return n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}); };
 const uuid = () => (crypto.randomUUID?crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==="x"?r:(r&0x3|0x8);return v.toString(16);} ));
+const escapeHTML = (s) => String(s ?? "")
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#39;");
+const isValidISODate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && !isNaN(new Date(`${value}T00:00:00`).getTime());
 const loadAll = () => { try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); } catch { return []; } };
 const saveAll = (arr) => localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
 const downloadBlob = (blob, filename) => { const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download=filename; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500); };
@@ -103,13 +110,20 @@ fileImport.addEventListener("change", async (e)=>{
   const text=await file.text(); let imported=[];
   try{ imported = text.trim().startsWith("[") ? JSON.parse(text) : parseCSV(text); }
   catch(err){ showAlert("Arquivo inválido: "+err.message, true); return; }
+  if(!Array.isArray(imported)){ showAlert("Arquivo inválido: o conteúdo deve ser uma lista de lançamentos.", true); return; }
   const all=loadAll();
+  let importedCount = 0;
+  let skippedCount = 0;
   for(const r of imported){
-    const rec={ id:r.id||uuid(), userId:r.userId||state.userId||"local", type:r.type||"despesa", categoria:r.categoria||"Outros",
-                valor:Number(String(r.valor).replace(",", "."))||0, data:(r.data||"").slice(0,10), descricao:r.descricao||"", createdAt:r.createdAt||new Date().toISOString() };
-    if(!all.find(x=>x.id===rec.id)) all.push(rec);
+    const rec = normalizeImportedRecord(r);
+    if(!rec){ skippedCount++; continue; }
+    if(!all.find(x=>x.id===rec.id)){ all.push(rec); importedCount++; }
   }
-  saveAll(all); showAlert("Importação concluída!", false); refresh(); fileImport.value="";
+  saveAll(all);
+  const suffix = skippedCount ? ` (${skippedCount} ignorado(s) por dados inválidos)` : "";
+  showAlert(`Importação concluída: ${importedCount} registro(s) incluído(s).${suffix}`, false);
+  refresh();
+  fileImport.value="";
 });
 
 btnExportXLSX.addEventListener("click", exportExcel);
@@ -118,7 +132,14 @@ btnExportDOCX.addEventListener("click", exportWord);
 function refresh(){
   const all=loadAll();
   state.transacoes = state.userId ? all.filter(r=>r.userId===state.userId) : all.slice();
-  state.transacoes.sort((a,b)=> (a.data > b.data ? -1 : 1));
+  state.transacoes.sort((a,b)=> {
+    const at = new Date(`${a.data || ""}T00:00:00`).getTime();
+    const bt = new Date(`${b.data || ""}T00:00:00`).getTime();
+    if(Number.isNaN(at) && Number.isNaN(bt)) return 0;
+    if(Number.isNaN(at)) return 1;
+    if(Number.isNaN(bt)) return -1;
+    return bt - at;
+  });
   drawKPIs(); const rowsShown=drawTable(); updateChartMensal(state.transacoes); updateChartCategoria(rowsShown);
 }
 
@@ -299,8 +320,8 @@ function summaryHTML(rows){
 function tableHTML(rows){
   const head = `<tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Descrição</th></tr>`;
   const body = rows.map(r=>`<tr>
-      <td>${r.data||""}</td><td>${r.type||""}</td><td>${r.categoria||""}</td>
-      <td>${String(r.valor).replace(".",",")}</td><td>${(r.descricao||"").replace(/</g,"&lt;")}</td>
+      <td>${escapeHTML(r.data||"")}</td><td>${escapeHTML(r.type||"")}</td><td>${escapeHTML(r.categoria||"")}</td>
+      <td>${escapeHTML(String(r.valor).replace(".",","))}</td><td>${escapeHTML(r.descricao||"")}</td>
     </tr>`).join("");
   return `<table border="1" cellspacing="0" cellpadding="4">${head}${body}</table>`;
 }
@@ -309,11 +330,11 @@ function drawTable(){
   const rows=getFiltered();
   tabela.innerHTML = rows.map(r=>`
     <tr>
-      <td>${r.data || "-"}</td>
-      <td>${r.type}</td>
-      <td>${r.categoria || "-"}</td>
+      <td>${escapeHTML(r.data || "-")}</td>
+      <td>${escapeHTML(r.type || "-")}</td>
+      <td>${escapeHTML(r.categoria || "-")}</td>
       <td class="right">${real(r.valor)}</td>
-      <td>${(r.descricao || "").replace(/</g,"&lt;")}</td>
+      <td>${escapeHTML(r.descricao || "")}</td>
       <td class="actions">
         <button class="icon-btn" title="Editar" data-action="edit" data-id="${r.id}">✏️</button>
         <button class="icon-btn" title="Excluir" data-action="delete" data-id="${r.id}">🗑</button>
@@ -321,4 +342,32 @@ function drawTable(){
     </tr>
   `).join("");
   return rows;
+}
+
+function normalizeImportedRecord(raw){
+  if(!raw || typeof raw !== "object") return null;
+  const type = String(raw.type || "despesa").toLowerCase();
+  if(type !== "receita" && type !== "despesa") return null;
+
+  const data = String(raw.data || "").slice(0,10);
+  if(!isValidISODate(data)) return null;
+
+  const valor = Number(String(raw.valor).replace(",", "."));
+  if(!Number.isFinite(valor) || valor < 0) return null;
+
+  const categoria = String(raw.categoria || "Outros").trim().slice(0, 60) || "Outros";
+  const descricao = String(raw.descricao || "").trim().slice(0, 120);
+  const userId = String(raw.userId || state.userId || "local").trim().slice(0, 80) || "local";
+  const id = String(raw.id || uuid()).trim() || uuid();
+
+  return {
+    id,
+    userId,
+    type,
+    categoria,
+    valor,
+    data,
+    descricao,
+    createdAt: raw.createdAt || new Date().toISOString()
+  };
 }
