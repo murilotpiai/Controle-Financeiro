@@ -71,6 +71,8 @@ body{
 .kpi{background:var(--muted);border:1px solid var(--border);border-radius:12px;padding:.8rem .9rem;min-width:0}
 .kpi span{color:#64748b;font-size:.9rem}
 .kpi strong{font-size:1.12rem;display:block;margin-top:.2rem}
+.kpi-meta{display:flex;gap:1rem;flex-wrap:wrap;padding:.55rem .75rem;border:1px solid var(--border);background:var(--muted);border-radius:10px;margin-bottom:.8rem;font-size:.88rem;color:#475569}
+.kpi-meta strong{color:var(--text)}
 
 .table-header{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap}
 .filters{display:flex;flex-wrap:wrap;gap:.5rem}
@@ -80,6 +82,7 @@ body{
 .table th,.table td{padding:.7rem .8rem;border-bottom:1px solid var(--border);text-align:left}
 .table th{background:var(--muted);font-weight:600;color:var(--text)}
 .table td.right{text-align:right}
+.empty-state td{padding:1.4rem .8rem;text-align:center;color:#64748b;font-style:italic}
 
 .icon-btn{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:.35rem .55rem;cursor:pointer}
 .icon-btn:hover{background:var(--muted)}
