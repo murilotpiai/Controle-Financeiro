@@ -1,80 +1,99 @@
-# 💰 Controle Financeiro — Site Estático (LocalStorage)
+# Controle Financeiro
 
-Aplicação web **100% estática** para controlar receitas e despesas direto no **navegador**, sem servidor.  
-Os dados são guardados no **LocalStorage** do seu browser. Possui **gráficos**, **filtros**, **exportação para Excel/Word**, **tema claro/escuro** e **importação de CSV/JSON**.
+Aplicacao web estatica para registrar receitas e despesas, acompanhar saldo, visualizar graficos e exportar dados. O projeto roda diretamente no navegador e salva as informacoes no LocalStorage, sem necessidade de backend.
 
----
+- Deploy: https://controle-financeiro-besj.vercel.app/
+- Repositorio: https://github.com/murilotpiai/Controle-Financeiro
 
-## 📸 Visão Geral
+## Objetivo do projeto
 
-- **Sem backend**: funciona abrindo o `index.html` com duplo-clique.
-- **Dados locais**: cada navegador/usuário mantém seus próprios lançamentos.
-- **UI moderna e responsiva** com modo **Claro/Escuro**.
-- **Gráficos** (mensal e por categoria) com Chart.js.
-- **Filtros com “Aplicar” e “Limpar filtros”**.
-- **Exportar**:
-  - **Excel (.xlsx)** e **Word (.docx)** se as bibliotecas estiverem carregadas;
-  - **Fallback** automático para **.xls** e **.doc** (HTML) quando offline/bloqueado.
-- **Importar**: CSV ou JSON (modelo compatível).
-- **Edição/Exclusão** de lançamentos inline.
+Criar uma ferramenta simples de controle financeiro pessoal, com foco em organizacao de dados, visualizacao de informacoes e pratica de desenvolvimento frontend com JavaScript.
 
----
+## Tecnologias utilizadas
 
-## 🗂 Estrutura
+- HTML5
+- CSS3
+- JavaScript
+- LocalStorage
+- Chart.js
+- SheetJS para exportacao em Excel
+- docx para exportacao em Word
 
+## Funcionalidades
 
-**Bibliotecas via CDN** (carregadas no `index.html`):
-- [Chart.js] para gráficos  
-- [SheetJS (xlsx)] para Excel  
-- [docx] para Word  
-> Se a rede bloquear essas URLs, o app **cai automaticamente** para exportação em `.xls`/`.doc` baseado em HTML.
+- Cadastro de usuario local
+- Registro de receitas e despesas
+- Edicao e exclusao de lancamentos
+- Filtros por texto, tipo e periodo
+- Indicadores de receitas, despesas, saldo e total de lancamentos
+- Grafico mensal de receitas e despesas
+- Grafico de despesas por categoria
+- Importacao de arquivos CSV ou JSON
+- Exportacao para Excel, Word e JSON
+- Tema claro e escuro
+- Interface responsiva
 
----
+## Estrutura do projeto
 
-## 🚀 Como rodar
+```text
+Controle-Financeiro/
+|-- frontend/
+|   |-- index.html
+|   |-- style.css
+|   `-- script.js
+|-- README.md
+`-- .gitignore
+```
 
-### Opção 1 — Local (recomendado para testes)
-1. Baixe/clon​e o repositório.
-2. Abra o arquivo **`index.html`** com duplo-clique.
+## Como executar localmente
 
-### Opção 2 — Vercel / Netlify / GitHub Pages
-- Basta fazer o **deploy estático** da pasta com `index.html`, `style.css` e `script.js`.  
-- Não há build. Não há variáveis de ambiente. Tudo roda no cliente.
+1. Clone o repositorio:
 
----
+```bash
+git clone https://github.com/murilotpiai/Controle-Financeiro.git
+cd Controle-Financeiro
+```
 
-## 🧭 Uso rápido (passo a passo)
+2. Abra o arquivo no navegador:
 
-1. **Usuário**: preencha o campo no topo e clique **Salvar**.  
-   > Importante: o app filtra os lançamentos por `userId`. Sem salvar, ele bloqueia o “Salvar lançamento”.
-2. **Novo lançamento**:
-   - Selecione **Tipo** (Receita/Despesa), **Categoria**, **Valor**, **Data** e **Descrição** → **Salvar**.
-3. **Filtros**:
-   - Texto, Tipo, Mês inicial/final → **Aplicar**.
-   - Para zerar todos os filtros → **Limpar filtros**.
-4. **Exportar**:
-   - **Excel**: baixa `controle_financeiro.xlsx` (ou `.xls` fallback).
-   - **Word**: baixa `controle_financeiro.docx` (ou `.doc` fallback).
-5. **Importar**:
-   - Clique **Importar** e envie um **CSV** ou **JSON** no modelo abaixo.
-6. **Tema**:
-   - Botão **Tema: Claro/Escuro** alterna e salva sua preferência.
+```text
+frontend/index.html
+```
 
----
+Nao ha etapa de build, servidor ou banco de dados. O armazenamento acontece no navegador do usuario.
 
-## 📊 Modelo de dados (Importação)
+## Prints
 
-### JSON (lista de objetos)
-```json
-[
-  {
-    "id": "uuid-opcional",
-    "userId": "meu-usuario",
-    "type": "receita ou despesa",
-    "categoria": "Alimentação",
-    "valor": 123.45,
-    "data": "2025-05-10",
-    "descricao": "Exemplo",
-    "createdAt": "2025-05-10T12:00:00.000Z"
-  }
-]
+Adicione aqui imagens do projeto em funcionamento quando quiser enriquecer a apresentacao no GitHub e no LinkedIn.
+
+Sugestao de prints:
+
+- Tela inicial com KPIs preenchidos
+- Graficos de receitas/despesas
+- Tabela com filtros aplicados
+- Exportacao ou importacao de dados
+
+## Aprendizados
+
+- Manipulacao do DOM com JavaScript puro
+- Uso de LocalStorage para persistencia local
+- Criacao de filtros e indicadores dinamicos
+- Integracao com bibliotecas externas via CDN
+- Organizacao de um projeto frontend simples para deploy estatico
+- Cuidados com validacao, importacao e exportacao de dados
+
+## Melhorias futuras
+
+- Adicionar testes de funcoes principais
+- Criar categorias personalizadas pelo usuario
+- Melhorar acessibilidade dos botoes de acao
+- Adicionar opcao de limpar todos os dados com confirmacao
+- Criar versao com backend e autenticacao
+- Containerizar uma versao futura com Docker
+
+## Autor
+
+Desenvolvido por Murilo Turcato Piai, estudante de Sistemas de Informacao na UNIFAFIBE, com interesse em desenvolvimento web, analise de dados, Power BI, Python, JavaScript, banco de dados, Docker e sistemas ERP.
+
+- LinkedIn: https://www.linkedin.com/in/mtpiai
+- GitHub: https://github.com/murilotpiai
