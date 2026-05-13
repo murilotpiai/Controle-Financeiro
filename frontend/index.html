@@ -1,148 +1,444 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Controle Financeiro (Local)</title>
-
-  <link rel="stylesheet" href="style.css"/>
-
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fincoob - Controle Financeiro Pessoal</title>
+  <meta name="description" content="Aplicativo web estático para controle financeiro pessoal com dashboard, lançamentos, metas, orçamento e relatórios." />
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-  <header class="container header">
-    <div class="brand">
-      <div class="logo">CF</div>
-      <div class="title">
-        <h1>Controle Financeiro</h1>
-        <p class="subtitle">Site estático (dados no seu navegador)</p>
+  <header class="app-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">F</div>
+        <div>
+          <h1>Fincoob</h1>
+          <p>Controle Financeiro Pessoal</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <label class="user-field" for="userName">
+          <span>Usuário</span>
+          <input id="userName" type="text" maxlength="60" placeholder="Seu nome ou apelido" />
+        </label>
+        <button id="btnSaveUser" class="btn primary" type="button">Salvar</button>
+        <button id="btnTheme" class="btn icon-text" type="button">
+          <span class="theme-dot" aria-hidden="true"></span>
+          <span>Tema claro</span>
+        </button>
       </div>
     </div>
-    <div class="user">
-      <label for="userId">Usuário:</label>
-      <input id="userId" type="text" placeholder="ex.: seu-email ou apelido" />
-      <button id="btnSalvarUsuario" class="btn primary">Salvar</button>
-      <button id="btnTheme" class="btn"><span class="theme-dot"></span>Tema: Claro</button>
-      <button id="btnExportXLSX" class="btn">Exportar Excel</button>
-      <button id="btnExportDOCX" class="btn">Exportar Word</button>
-      <label class="btn">
-        Importar
-        <input id="fileImport" type="file" accept=".csv,.json" style="display:none">
-      </label>
-    </div>
+
+    <nav class="container app-nav" aria-label="Navegação principal">
+      <button class="nav-link active" type="button" data-view="dashboard">Dashboard</button>
+      <button class="nav-link" type="button" data-view="lancamentos">Lançamentos</button>
+      <button class="nav-link" type="button" data-view="relatorios">Relatórios</button>
+      <button class="nav-link" type="button" data-view="metas">Metas</button>
+      <button class="nav-link" type="button" data-view="orcamento">Orçamento</button>
+      <button class="nav-link" type="button" data-view="backup">Backup</button>
+    </nav>
   </header>
 
-  <main class="container grid">
-    <!-- CARD: Lançamento -->
-    <section class="card">
-      <div class="card-head">
-        <h2>Novo Lançamento</h2>
-        <span id="editBadge" class="badge hidden">Editando… <button id="btnCancelarEdicao" class="link">cancelar</button></span>
+  <main class="container app-main">
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <section id="view-dashboard" class="view active">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Visão geral</span>
+          <h2>Dashboard financeiro</h2>
+        </div>
+        <p id="dashboardMonthLabel">Resumo do mês atual</p>
       </div>
-      <form id="formLancamento" class="form">
-        <div class="form-row">
-          <label>Tipo</label>
-          <div class="segmented">
-            <input type="radio" id="tipo_receita" name="type" value="receita" checked>
-            <label for="tipo_receita">Receita</label>
-            <input type="radio" id="tipo_despesa" name="type" value="despesa">
-            <label for="tipo_despesa">Despesa</label>
+
+      <div class="kpi-grid">
+        <article class="kpi-card">
+          <span>Saldo atual</span>
+          <strong id="kpiSaldoAtual">R$ 0,00</strong>
+          <small id="kpiTotalLancamentos">0 lançamentos</small>
+        </article>
+        <article class="kpi-card success">
+          <span>Total de receitas</span>
+          <strong id="kpiReceitas">R$ 0,00</strong>
+          <small>Entradas registradas</small>
+        </article>
+        <article class="kpi-card danger">
+          <span>Total de despesas</span>
+          <strong id="kpiDespesas">R$ 0,00</strong>
+          <small>Saídas registradas</small>
+        </article>
+        <article class="kpi-card accent">
+          <span>Resultado do mês</span>
+          <strong id="kpiResultadoMes">R$ 0,00</strong>
+          <small id="kpiComparativoMes">Sem mês anterior</small>
+        </article>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel wide">
+          <div class="panel-head">
+            <h3>Receitas x despesas</h3>
+            <span>Evolução mensal</span>
           </div>
+          <div class="chart-box"><canvas id="chartReceitasDespesas"></canvas></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Despesas por categoria</h3>
+            <span>Mês atual</span>
+          </div>
+          <div class="chart-box"><canvas id="chartCategorias"></canvas></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Últimos lançamentos</h3>
+            <button class="link-button" type="button" data-go-view="lancamentos">Ver todos</button>
+          </div>
+          <div id="ultimosLancamentos" class="stack-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Maiores gastos</h3>
+            <span>Por categoria</span>
+          </div>
+          <div id="topCategorias" class="rank-list"></div>
+        </section>
+
+        <section class="panel wide">
+          <div class="panel-head">
+            <h3>Dicas financeiras</h3>
+            <span>Geradas com seus dados</span>
+          </div>
+          <div id="dicasFinanceiras" class="tips-grid"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="view-lancamentos" class="view">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Movimentações</span>
+          <h2>Lançamentos financeiros</h2>
         </div>
-        <div class="form-row">
-          <label for="categoria">Categoria</label>
-          <select id="categoria" required>
-            <option value="">Selecione...</option>
-            <option>Salário</option>
-            <option>Freelancer</option>
-            <option>Alimentação</option>
-            <option>Transporte</option>
-            <option>Moradia</option>
-            <option>Lazer</option>
-            <option>Educação</option>
-            <option>Saúde</option>
-            <option>Outros</option>
-          </select>
-        </div>
-        <div class="form-row two">
+        <p>Cadastre receitas e despesas com categoria, pagamento e observações.</p>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel form-panel">
+          <div class="panel-head">
+            <h3 id="transactionFormTitle">Novo lançamento</h3>
+            <button id="btnCancelTransactionEdit" class="link-button hidden" type="button">Cancelar edição</button>
+          </div>
+
+          <form id="transactionForm" class="form">
+            <input id="transactionId" type="hidden" />
+            <div class="form-row">
+              <label>Tipo</label>
+              <div class="segmented">
+                <input id="typeReceita" name="transactionType" type="radio" value="receita" checked />
+                <label for="typeReceita">Receita</label>
+                <input id="typeDespesa" name="transactionType" type="radio" value="despesa" />
+                <label for="typeDespesa">Despesa</label>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="transactionDescription">Descrição</label>
+              <input id="transactionDescription" type="text" maxlength="120" placeholder="Ex.: Salário, mercado, aluguel" required />
+            </div>
+            <div class="form-row two">
+              <div>
+                <label for="transactionAmount">Valor (R$)</label>
+                <input id="transactionAmount" type="text" inputmode="numeric" placeholder="0,00" required />
+              </div>
+              <div>
+                <label for="transactionDate">Data</label>
+                <input id="transactionDate" type="date" required />
+              </div>
+            </div>
+            <div class="form-row two">
+              <div>
+                <label for="transactionCategory">Categoria</label>
+                <select id="transactionCategory" required></select>
+              </div>
+              <div>
+                <label for="transactionPayment">Forma de pagamento</label>
+                <select id="transactionPayment" required>
+                  <option value="">Selecione</option>
+                  <option>Pix</option>
+                  <option>Dinheiro</option>
+                  <option>Cartão de débito</option>
+                  <option>Cartão de crédito</option>
+                  <option>Transferência</option>
+                  <option>Boleto</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="transactionNote">Observação</label>
+              <textarea id="transactionNote" maxlength="240" rows="3" placeholder="Detalhes opcionais do lançamento"></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn ghost" type="reset">Limpar</button>
+              <button id="btnSaveTransaction" class="btn primary" type="submit">Salvar lançamento</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Categorias</h3>
+            <span>Receitas e despesas</span>
+          </div>
+          <form id="categoryForm" class="inline-form">
+            <input id="categoryId" type="hidden" />
+            <input id="categoryName" type="text" maxlength="50" placeholder="Nova categoria" required />
+            <select id="categoryType" required>
+              <option value="despesa">Despesa</option>
+              <option value="receita">Receita</option>
+              <option value="ambos">Ambos</option>
+            </select>
+            <button id="btnSaveCategory" class="btn primary" type="submit">Adicionar</button>
+          </form>
+          <div id="categoryList" class="tag-list"></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="table-toolbar">
           <div>
-            <label for="valor">Valor (R$)</label>
-            <input id="valor" type="text" inputmode="numeric" placeholder="0,00" required>
+            <h3>Lançamentos cadastrados</h3>
+            <p>Use os filtros para encontrar movimentações específicas.</p>
           </div>
-          <div>
-            <label for="data">Data</label>
-            <input id="data" type="date" required>
+          <div class="filters">
+            <input id="filterText" type="search" placeholder="Buscar por descrição, categoria ou observação" />
+            <select id="filterType">
+              <option value="">Todos os tipos</option>
+              <option value="receita">Receitas</option>
+              <option value="despesa">Despesas</option>
+            </select>
+            <select id="filterCategory"></select>
+            <input id="filterStart" type="month" />
+            <input id="filterEnd" type="month" />
+            <button id="btnClearFilters" class="btn ghost" type="button">Limpar</button>
           </div>
         </div>
-        <div class="form-row">
-          <label for="descricao">Descrição</label>
-          <input id="descricao" type="text" maxlength="120" placeholder="Ex.: Mercado do mês, Uber, bônus"/>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Pagamento</th>
+                <th class="right">Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsTable"></tbody>
+          </table>
         </div>
-        <div class="form-actions">
-          <button id="btnSubmit" class="btn primary" type="submit">Salvar</button>
-          <button class="btn ghost" type="reset">Limpar</button>
+      </section>
+    </section>
+
+    <section id="view-relatorios" class="view">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Análise</span>
+          <h2>Relatórios</h2>
         </div>
-      </form>
-      <div id="alertForm" class="alert hidden"></div>
-    </section>
-
-    <section class="card">
-      <h2>Resumo</h2>
-      <div class="kpis">
-        <div class="kpi"><span>Receitas</span><strong id="kpiReceitas">R$ 0,00</strong></div>
-        <div class="kpi"><span>Despesas</span><strong id="kpiDespesas">R$ 0,00</strong></div>
-        <div class="kpi"><span>Saldo</span><strong id="kpiSaldo">R$ 0,00</strong></div>
+        <p>Filtre seus dados e exporte o relatório para Excel.</p>
       </div>
-      <div class="kpi-meta">
-        <span>Total de lançamentos: <strong id="kpiTotal">0</strong></span>
-        <span>Última atualização: <strong id="kpiUltimaAtualizacao">—</strong></span>
-      </div>
-      <div style="height: 220px"><canvas id="chartMensal"></canvas></div>
-    </section>
 
-    <section class="card">
-      <h2>Despesas por Categoria</h2>
-      <div style="height: 220px"><canvas id="chartCategoria"></canvas></div>
-    </section>
-
-    <section class="card stretch">
-      <div class="table-header">
-        <h2>Lançamentos</h2>
-        <div class="filters">
-          <input id="filtroTexto" type="text" placeholder="Buscar por descrição ou categoria..."/>
-          <select id="filtroTipo">
-            <option value="">Todos</option>
-            <option value="receita">Receitas</option>
-            <option value="despesa">Despesas</option>
+      <section class="panel">
+        <div class="filters report-filters">
+          <input id="reportStart" type="date" />
+          <input id="reportEnd" type="date" />
+          <select id="reportType">
+            <option value="">Todos os tipos</option>
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
           </select>
-          <input id="filtroDataIni" type="month">
-          <input id="filtroDataFim" type="month">
-          <button id="btnAplicarFiltros" class="btn" type="button">Aplicar</button>
-          <button id="btnLimparFiltros" class="btn ghost" type="button">Limpar filtros</button>
-          <button id="btnExportJSON" class="btn" type="button">Backup JSON</button>
+          <select id="reportCategory"></select>
+          <select id="reportPayment">
+            <option value="">Todas as formas</option>
+          </select>
+          <button id="btnExportReport" class="btn primary" type="button">Exportar Excel</button>
         </div>
+      </section>
+
+      <div class="kpi-grid compact">
+        <article class="kpi-card success"><span>Entradas</span><strong id="reportReceitas">R$ 0,00</strong></article>
+        <article class="kpi-card danger"><span>Saídas</span><strong id="reportDespesas">R$ 0,00</strong></article>
+        <article class="kpi-card accent"><span>Saldo</span><strong id="reportSaldo">R$ 0,00</strong></article>
+        <article class="kpi-card"><span>Registros</span><strong id="reportCount">0</strong></article>
       </div>
-      <div class="table-wrap">
-        <table class="table" id="tabelaLancamentos">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Tipo</th>
-              <th>Categoria</th>
-              <th class="right">Valor</th>
-              <th>Descrição</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head"><h3>Saldo mensal</h3><span>Evolução</span></div>
+          <div class="chart-box"><canvas id="chartSaldo"></canvas></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h3>Por forma de pagamento</h3><span>Despesas</span></div>
+          <div class="chart-box"><canvas id="chartPagamento"></canvas></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Pagamento</th>
+                <th class="right">Valor</th>
+              </tr>
+            </thead>
+            <tbody id="reportTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section id="view-metas" class="view">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Planejamento</span>
+          <h2>Metas financeiras</h2>
+        </div>
+        <p>Crie objetivos de economia e acompanhe o progresso.</p>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel form-panel">
+          <div class="panel-head">
+            <h3 id="goalFormTitle">Nova meta</h3>
+            <button id="btnCancelGoalEdit" class="link-button hidden" type="button">Cancelar edição</button>
+          </div>
+          <form id="goalForm" class="form">
+            <input id="goalId" type="hidden" />
+            <div class="form-row">
+              <label for="goalName">Nome da meta</label>
+              <input id="goalName" type="text" maxlength="80" placeholder="Ex.: Reserva de emergência" required />
+            </div>
+            <div class="form-row two">
+              <div>
+                <label for="goalTarget">Valor desejado</label>
+                <input id="goalTarget" type="text" inputmode="numeric" placeholder="0,00" required />
+              </div>
+              <div>
+                <label for="goalCurrent">Valor atual</label>
+                <input id="goalCurrent" type="text" inputmode="numeric" placeholder="0,00" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="goalDeadline">Prazo</label>
+              <input id="goalDeadline" type="date" required />
+            </div>
+            <div class="form-row">
+              <label for="goalDescription">Descrição</label>
+              <textarea id="goalDescription" maxlength="200" rows="3" placeholder="Por que essa meta é importante?"></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn ghost" type="reset">Limpar</button>
+              <button id="btnSaveGoal" class="btn primary" type="submit">Salvar meta</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Sugestão automática</h3>
+            <span>Com base nos gastos</span>
+          </div>
+          <div id="goalSuggestion" class="suggestion-box"></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div id="goalsList" class="cards-grid"></div>
+      </section>
+    </section>
+
+    <section id="view-orcamento" class="view">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Limites</span>
+          <h2>Orçamento mensal</h2>
+        </div>
+        <p>Defina limites por categoria e acompanhe quanto já foi usado.</p>
+      </div>
+
+      <section class="panel">
+        <form id="budgetForm" class="inline-form budget-form">
+          <select id="budgetCategory" required></select>
+          <input id="budgetMonth" type="month" required />
+          <input id="budgetLimit" type="text" inputmode="numeric" placeholder="Limite mensal" required />
+          <button class="btn primary" type="submit">Salvar orçamento</button>
+        </form>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head"><h3>Orçamento por categoria</h3><span>Mês selecionado</span></div>
+          <div class="chart-box"><canvas id="chartOrcamento"></canvas></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h3>Status dos limites</h3><span>Alertas visuais</span></div>
+          <div id="budgetList" class="budget-list"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="view-backup" class="view">
+      <div class="page-title">
+        <div>
+          <span class="eyebrow">Dados locais</span>
+          <h2>Backup e exportação</h2>
+        </div>
+        <p>Os dados ficam no LocalStorage deste navegador. Faça backup antes de trocar de dispositivo.</p>
+      </div>
+
+      <div class="backup-grid">
+        <section class="panel">
+          <h3>Exportar dados</h3>
+          <p>Baixe todos os lançamentos, categorias, metas e orçamentos em JSON.</p>
+          <div class="button-row">
+            <button id="btnExportJson" class="btn primary" type="button">Exportar JSON</button>
+            <button id="btnExportAllExcel" class="btn" type="button">Exportar Excel</button>
+            <button id="btnExportWord" class="btn" type="button">Exportar Word</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h3>Importar backup</h3>
+          <p>Restaure um arquivo JSON exportado pelo Fincoob.</p>
+          <label class="file-button">
+            Selecionar arquivo JSON
+            <input id="backupImport" type="file" accept=".json,application/json" />
+          </label>
+        </section>
+
+        <section class="panel danger-zone">
+          <h3>Limpar dados</h3>
+          <p>Remove todos os dados financeiros salvos neste navegador.</p>
+          <button id="btnClearData" class="btn danger" type="button">Limpar todos os dados</button>
+        </section>
       </div>
     </section>
   </main>
-
 
   <script src="script.js"></script>
 </body>
