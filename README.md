@@ -1,13 +1,37 @@
-# Fincoob - Gestão Financeira
+# Fincoob — Controle Financeiro Pessoal
 
-Aplicação web estática para registrar receitas e despesas, acompanhar saldo, visualizar gráficos e exportar dados. O projeto roda diretamente no navegador e salva as informações no LocalStorage, sem necessidade de backend.
+Aplicativo web estático para controle financeiro pessoal, desenvolvido com HTML, CSS e JavaScript puro. O Fincoob permite registrar receitas e despesas, acompanhar indicadores, definir metas, controlar orçamento mensal por categoria, gerar relatórios e exportar/importar dados usando o próprio navegador.
+
+O projeto não utiliza backend nem banco de dados externo. Todas as informações ficam salvas localmente no navegador por meio do LocalStorage.
 
 - Deploy: https://controle-financeiro-besj.vercel.app/
-- Repositório: https://github.com/murilotpiai/Fincoob---Gest-o-Financeira
+- Repositório: https://github.com/murilotpiai/Fincoob-Gestao-Financeira
 
 ## Objetivo do projeto
 
-Criar uma ferramenta simples de gestão financeira pessoal, com foco em organização de dados, visualização de informações e prática de desenvolvimento frontend com JavaScript.
+Criar uma aplicação completa, simples e profissional de gestão financeira pessoal para compor portfólio de estágio em TI, demonstrando organização de interface, manipulação de dados no frontend, persistência local, relatórios e visualização com gráficos.
+
+## Funcionalidades
+
+- Dashboard com saldo atual, receitas, despesas e resultado do mês.
+- Comparativo do mês atual com o mês anterior.
+- Últimos lançamentos e categorias com maior gasto.
+- Dicas financeiras automáticas com base nos dados cadastrados.
+- Cadastro, edição e exclusão de receitas e despesas.
+- Campos de descrição, valor, data, categoria, tipo, forma de pagamento e observação.
+- Máscara monetária em real brasileiro.
+- Categorias padrão para receitas e despesas.
+- Criação, edição e remoção de categorias personalizadas.
+- Metas financeiras com valor desejado, valor atual, prazo, progresso e valor restante.
+- Sugestão automática de meta com base nos gastos do mês.
+- Orçamento mensal por categoria com alertas de limite.
+- Relatórios por período, categoria, tipo e forma de pagamento.
+- Gráficos de receitas x despesas, despesas por categoria, evolução do saldo, forma de pagamento e orçamento.
+- Exportação de dados e relatórios para JSON, Excel e Word.
+- Importação de backup em JSON.
+- Limpeza de todos os dados com confirmação.
+- Tema claro e escuro.
+- Interface responsiva.
 
 ## Tecnologias utilizadas
 
@@ -16,27 +40,29 @@ Criar uma ferramenta simples de gestão financeira pessoal, com foco em organiza
 - JavaScript
 - LocalStorage
 - Chart.js
-- SheetJS para exportação em Excel
-- docx para exportação em Word
+- SheetJS (xlsx)
 
-## Funcionalidades
+## Como executar localmente
 
-- Cadastro de usuário local
-- Registro de receitas e despesas
-- Edição e exclusão de lançamentos
-- Filtros por texto, tipo e período
-- Indicadores de receitas, despesas, saldo e total de lançamentos
-- Gráfico mensal de receitas e despesas
-- Gráfico de despesas por categoria
-- Importação de arquivos CSV ou JSON
-- Exportação para Excel, Word e JSON
-- Tema claro e escuro
-- Interface responsiva
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/murilotpiai/Fincoob-Gestao-Financeira.git
+cd Fincoob-Gestao-Financeira
+```
+
+2. Abra o arquivo no navegador:
+
+```text
+frontend/index.html
+```
+
+Não há etapa de build, servidor, autenticação ou banco de dados. O projeto é compatível com deploy estático na Vercel.
 
 ## Estrutura do projeto
 
 ```text
-fincoob-gestao-financeira/
+Fincoob-Gestao-Financeira/
 |-- frontend/
 |   |-- index.html
 |   |-- style.css
@@ -47,51 +73,45 @@ fincoob-gestao-financeira/
 `-- .gitignore
 ```
 
-## Como executar localmente
+## Prints do sistema
 
-1. Clone o repositório:
-
-```bash
-git clone https://github.com/murilotpiai/Fincoob---Gest-o-Financeira.git
-cd Fincoob---Gest-o-Financeira
-```
-
-2. Abra o arquivo no navegador:
+Adicione ou atualize os prints abaixo conforme novas telas forem publicadas:
 
 ```text
-frontend/index.html
+docs/images/fincoob-home.png
+docs/images/fincoob-mobile.png
 ```
 
-Não há etapa de build, servidor ou banco de dados. O armazenamento acontece no navegador do usuário.
+Sugestões de prints para GitHub e LinkedIn:
 
-## Prints
+- Dashboard com dados preenchidos.
+- Tela de lançamentos com filtros.
+- Relatórios com gráficos.
+- Tela de metas financeiras.
+- Orçamento mensal por categoria.
+- Backup e exportação.
 
-Adicione aqui imagens do projeto em funcionamento quando quiser enriquecer a apresentação no GitHub e no LinkedIn.
+## Aprendizados obtidos
 
-Sugestão de prints:
-
-- Tela inicial com KPIs preenchidos
-- Gráficos de receitas e despesas
-- Tabela com filtros aplicados
-- Exportação ou importação de dados
-
-## Aprendizados
-
-- Manipulação do DOM com JavaScript puro
-- Uso de LocalStorage para persistência local
-- Criação de filtros e indicadores dinâmicos
-- Integração com bibliotecas externas via CDN
-- Organização de um projeto frontend simples para deploy estático
-- Cuidados com validação, importação e exportação de dados
+- Organização de uma aplicação frontend sem framework.
+- Persistência de dados com LocalStorage.
+- Estruturação de estado local no navegador.
+- Criação de CRUDs com JavaScript puro.
+- Validação e normalização de dados.
+- Geração de indicadores financeiros.
+- Uso de Chart.js para visualização de dados.
+- Exportação e importação de informações em JSON e Excel.
+- Criação de interface responsiva para desktop e mobile.
 
 ## Melhorias futuras
 
-- Adicionar testes de funções principais
-- Criar categorias personalizadas pelo usuário
-- Melhorar acessibilidade dos botões de ação
-- Adicionar opção de limpar todos os dados com confirmação
-- Criar versão com backend e autenticação
-- Containerizar uma versão futura com Docker
+- Adicionar testes automatizados para funções de cálculo.
+- Criar opção de recorrência para despesas fixas.
+- Permitir anexar comprovantes localmente.
+- Criar simulação de parcelamento de cartão de crédito.
+- Melhorar acessibilidade com atalhos de teclado e testes com leitores de tela.
+- Adicionar PWA para instalação no celular.
+- Criar uma versão futura com backend e autenticação.
 
 ## Autor
 
