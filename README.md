@@ -1,13 +1,13 @@
 # Fincoob - Gestão Financeira
 
-Aplicacao web estatica para registrar receitas e despesas, acompanhar saldo, visualizar graficos e exportar dados. O projeto roda diretamente no navegador e salva as informacoes no LocalStorage, sem necessidade de backend.
+Aplicação web estática para registrar receitas e despesas, acompanhar saldo, visualizar gráficos e exportar dados. O projeto roda diretamente no navegador e salva as informações no LocalStorage, sem necessidade de backend.
 
 - Deploy: https://controle-financeiro-besj.vercel.app/
-- Repositorio: https://github.com/murilotpiai/Controle-Financeiro
+- Repositório: https://github.com/murilotpiai/Fincoob---Gest-o-Financeira
 
 ## Objetivo do projeto
 
-Criar uma ferramenta simples de controle financeiro pessoal, com foco em organizacao de dados, visualizacao de informacoes e pratica de desenvolvimento frontend com JavaScript.
+Criar uma ferramenta simples de gestão financeira pessoal, com foco em organização de dados, visualização de informações e prática de desenvolvimento frontend com JavaScript.
 
 ## Tecnologias utilizadas
 
@@ -16,42 +16,44 @@ Criar uma ferramenta simples de controle financeiro pessoal, com foco em organiz
 - JavaScript
 - LocalStorage
 - Chart.js
-- SheetJS para exportacao em Excel
-- docx para exportacao em Word
+- SheetJS para exportação em Excel
+- docx para exportação em Word
 
 ## Funcionalidades
 
-- Cadastro de usuario local
+- Cadastro de usuário local
 - Registro de receitas e despesas
-- Edicao e exclusao de lancamentos
-- Filtros por texto, tipo e periodo
-- Indicadores de receitas, despesas, saldo e total de lancamentos
-- Grafico mensal de receitas e despesas
-- Grafico de despesas por categoria
-- Importacao de arquivos CSV ou JSON
-- Exportacao para Excel, Word e JSON
+- Edição e exclusão de lançamentos
+- Filtros por texto, tipo e período
+- Indicadores de receitas, despesas, saldo e total de lançamentos
+- Gráfico mensal de receitas e despesas
+- Gráfico de despesas por categoria
+- Importação de arquivos CSV ou JSON
+- Exportação para Excel, Word e JSON
 - Tema claro e escuro
 - Interface responsiva
 
 ## Estrutura do projeto
 
 ```text
-Controle-Financeiro/
+fincoob-gestao-financeira/
 |-- frontend/
 |   |-- index.html
 |   |-- style.css
 |   `-- script.js
+|-- docs/
+|   `-- images/
 |-- README.md
 `-- .gitignore
 ```
 
 ## Como executar localmente
 
-1. Clone o repositorio:
+1. Clone o repositório:
 
 ```bash
-git clone https://github.com/murilotpiai/Controle-Financeiro.git
-cd Controle-Financeiro
+git clone https://github.com/murilotpiai/Fincoob---Gest-o-Financeira.git
+cd Fincoob---Gest-o-Financeira
 ```
 
 2. Abra o arquivo no navegador:
@@ -60,40 +62,40 @@ cd Controle-Financeiro
 frontend/index.html
 ```
 
-Nao ha etapa de build, servidor ou banco de dados. O armazenamento acontece no navegador do usuario.
+Não há etapa de build, servidor ou banco de dados. O armazenamento acontece no navegador do usuário.
 
 ## Prints
 
-Adicione aqui imagens do projeto em funcionamento quando quiser enriquecer a apresentacao no GitHub e no LinkedIn.
+Adicione aqui imagens do projeto em funcionamento quando quiser enriquecer a apresentação no GitHub e no LinkedIn.
 
-Sugestao de prints:
+Sugestão de prints:
 
 - Tela inicial com KPIs preenchidos
-- Graficos de receitas/despesas
+- Gráficos de receitas e despesas
 - Tabela com filtros aplicados
-- Exportacao ou importacao de dados
+- Exportação ou importação de dados
 
 ## Aprendizados
 
-- Manipulacao do DOM com JavaScript puro
-- Uso de LocalStorage para persistencia local
-- Criacao de filtros e indicadores dinamicos
-- Integracao com bibliotecas externas via CDN
-- Organizacao de um projeto frontend simples para deploy estatico
-- Cuidados com validacao, importacao e exportacao de dados
+- Manipulação do DOM com JavaScript puro
+- Uso de LocalStorage para persistência local
+- Criação de filtros e indicadores dinâmicos
+- Integração com bibliotecas externas via CDN
+- Organização de um projeto frontend simples para deploy estático
+- Cuidados com validação, importação e exportação de dados
 
 ## Melhorias futuras
 
-- Adicionar testes de funcoes principais
-- Criar categorias personalizadas pelo usuario
-- Melhorar acessibilidade dos botoes de acao
-- Adicionar opcao de limpar todos os dados com confirmacao
-- Criar versao com backend e autenticacao
-- Containerizar uma versao futura com Docker
+- Adicionar testes de funções principais
+- Criar categorias personalizadas pelo usuário
+- Melhorar acessibilidade dos botões de ação
+- Adicionar opção de limpar todos os dados com confirmação
+- Criar versão com backend e autenticação
+- Containerizar uma versão futura com Docker
 
 ## Autor
 
-Desenvolvido por Murilo Turcato Piai, estudante de Sistemas de Informacao na UNIFAFIBE, com interesse em desenvolvimento web, analise de dados, Power BI, Python, JavaScript, banco de dados, Docker e sistemas ERP.
+Desenvolvido por Murilo Turcato Piai, estudante de Sistemas de Informação na UNIFAFIBE, com interesse em desenvolvimento web, análise de dados, Power BI, Python, JavaScript, banco de dados, Docker e sistemas ERP.
 
 - LinkedIn: https://www.linkedin.com/in/mtpiai
 - GitHub: https://github.com/murilotpiai
