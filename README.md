@@ -1,4 +1,4 @@
-# Controle Financeiro
+# Fincoob - Gestão Financeira
 
 Aplicacao web estatica para registrar receitas e despesas, acompanhar saldo, visualizar graficos e exportar dados. O projeto roda diretamente no navegador e salva as informacoes no LocalStorage, sem necessidade de backend.
 
