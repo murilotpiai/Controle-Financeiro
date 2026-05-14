@@ -4,7 +4,7 @@ Aplicativo web estático para controle financeiro pessoal, desenvolvido com HTML
 
 O projeto não utiliza backend nem banco de dados externo. Todas as informações ficam salvas localmente no navegador por meio do LocalStorage.
 
-- Deploy: https://controle-financeiro-besj.vercel.app/
+- Deploy: https://frontend-eta-weld-81aprrb45l.vercel.app/
 - Repositório: https://github.com/murilotpiai/Fincoob-Gestao-Financeira
 
 ## Objetivo do projeto
@@ -15,6 +15,8 @@ Criar uma aplicação completa, simples e profissional de gestão financeira pes
 
 - Dashboard com saldo atual, receitas, despesas e resultado do mês.
 - Comparativo do mês atual com o mês anterior.
+- KPI de patrimônio investido e previsão simples de evolução.
+- Personalização dos gráficos exibidos no dashboard.
 - Últimos lançamentos e categorias com maior gasto.
 - Dicas financeiras automáticas com base nos dados cadastrados.
 - Cadastro, edição e exclusão de receitas e despesas.
@@ -23,10 +25,14 @@ Criar uma aplicação completa, simples e profissional de gestão financeira pes
 - Categorias padrão para receitas e despesas.
 - Criação, edição e remoção de categorias personalizadas.
 - Metas financeiras com valor desejado, valor atual, prazo, progresso e valor restante.
+- Aporte direto em metas cadastradas, sem precisar editar a meta inteira.
+- Previsão de aporte médio mensal necessário para cumprir o prazo da meta.
 - Sugestão automática de meta com base nos gastos do mês.
 - Orçamento mensal por categoria com alertas de limite.
+- Cadastro e acompanhamento de investimentos.
+- Projeção estimada de investimentos em 12 meses com valor atual, aporte mensal e rentabilidade anual estimada.
 - Relatórios por período, categoria, tipo e forma de pagamento.
-- Gráficos de receitas x despesas, despesas por categoria, evolução do saldo, forma de pagamento e orçamento.
+- Gráficos de barras, rosca, linha e área para receitas x despesas, despesas por categoria, evolução do saldo, patrimônio, investimentos, forma de pagamento e orçamento.
 - Exportação de dados e relatórios para JSON, Excel e Word.
 - Importação de backup em JSON.
 - Limpeza de todos os dados com confirmação.
@@ -41,6 +47,7 @@ Criar uma aplicação completa, simples e profissional de gestão financeira pes
 - LocalStorage
 - Chart.js
 - SheetJS (xlsx)
+- Vercel
 
 ## Como executar localmente
 
@@ -62,9 +69,10 @@ Não há etapa de build, servidor, autenticação ou banco de dados. O projeto �
 ## Estrutura do projeto
 
 ```text
-Fincoob-Gestao-Financeira/
+Fincoob-Gestao-Financeira-main/
 |-- frontend/
 |   |-- index.html
+|   |-- app.js
 |   |-- style.css
 |   `-- script.js
 |-- docs/
@@ -88,6 +96,7 @@ Sugestões de prints para GitHub e LinkedIn:
 - Tela de lançamentos com filtros.
 - Relatórios com gráficos.
 - Tela de metas financeiras.
+- Tela de investimentos e projeção de patrimônio.
 - Orçamento mensal por categoria.
 - Backup e exportação.
 
@@ -100,6 +109,7 @@ Sugestões de prints para GitHub e LinkedIn:
 - Validação e normalização de dados.
 - Geração de indicadores financeiros.
 - Uso de Chart.js para visualização de dados.
+- Criação de gráficos mais adequados para análise financeira: rosca para composição, barras para comparação e linha/área para evolução.
 - Exportação e importação de informações em JSON e Excel.
 - Criação de interface responsiva para desktop e mobile.
 
